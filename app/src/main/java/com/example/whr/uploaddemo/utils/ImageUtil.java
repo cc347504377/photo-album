@@ -26,24 +26,45 @@ public class ImageUtil {
     private static ContentResolver contentResolver;
     private static ImageUtil imageUtil;
     private List<ImageInfo> datas;
-    private final BitmapFactory.Options options;
+    private static BitmapFactory.Options options;
     private static int displayw;
 
     private ImageUtil() {
-        options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = false;
-        options.inSampleSize = 5;   //width，hight设为原来的十分一
+
+
+
     }
     public static ImageUtil getinstance(ContentResolver contentResolver,Context context) {
 
         ImageUtil.contentResolver = contentResolver;
         if (imageUtil == null) {
             imageUtil = new ImageUtil();
-            displayw = ((Activity) context).getWindowManager().getDefaultDisplay().getWidth();
+            initBitmapOption(context);
         }
         return imageUtil;
     }
 
+    /**
+     * 初始化图片配置
+     * @param context
+     */
+    private static void initBitmapOption(Context context) {
+        displayw = ((Activity) context).getWindowManager().getDefaultDisplay().getWidth();
+        options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = false;
+        options.inSampleSize = 5;   //width，hight设为原来的十分一
+    }
+
+    /**
+     * 通过ContentResolver获得系统图片集合
+     * ContentResolver.query
+     * 第一个参数为URI
+     * 第二个参数为需要查询的列名
+     * 第三个参数为过滤条件
+     * 第四个参数为过滤条件辅助，当第三个参数中有‘？’通配符时使用
+     * 第五个参数为排序
+     * @return
+     */
     public List<ImageInfo> getimages() {
         datas = new ArrayList<>();
         Cursor cursor = contentResolver.query(uri, new String[]{MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATA}

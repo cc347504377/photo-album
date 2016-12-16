@@ -10,6 +10,13 @@ import android.util.LruCache;
 
 public class CacheUtil {
     private LruCache<String,Bitmap> lruCache = new LruCache<String,Bitmap>(1024 * 1024 * 20){
+        /**
+         * 此方法用于计算图片大小，不同SDK计算方法不同，
+         * 必须重新该方法
+         * @param key
+         * @param bitmap
+         * @return
+         */
         @Override
         protected int sizeOf(String key, Bitmap bitmap) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
